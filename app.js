@@ -9,7 +9,18 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+// added cors
+const allowedOrigins = [
+    "https://economyapp.up.railway.app", // link after upload project
+    "http://localhost:3000" // link use when devolpment
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    methods: "GET,POST,PUT,DELETE,PATCH",
+    credentials: true
+}));
 
 //Api routes
 const baseUrl = process.env.BASE_URL
@@ -28,5 +39,7 @@ connection(); //call function to DB connection
 //run server
 const PORT = process.env.PORT || 5000
 app.listen(PORT,()=>{
-    console.log(`Server running on http://localhost:${PORT}/economy-api/v1/`);
+    console.log(`Server running on: https://economyapp.up.railway.app${baseUrl}`)
+    console.log(`Server running on http://localhost:${PORT}${baseUrl}/`);
 })
+

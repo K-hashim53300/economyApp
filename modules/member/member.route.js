@@ -11,7 +11,7 @@ const router = Router();
 
 router.post('/add',authMiddleware(),myMulter(validationType.image).single("image"),handleMulterErr,addMember);
 //update member api route
-router.put("/update/:id",updateMember);
+router.put("/update/:id",myMulter(validationType.image).single("image"),handleMulterErr,updateMember);
 //delete member api route
 router.delete("/delete/:id",deleteMember);
 //get all member based on userId from token api route

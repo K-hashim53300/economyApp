@@ -36,30 +36,48 @@ export const addMember = async (req, res) => {
 //update member function
 export const updateMember = async (req, res) => {
   try {
-    let { id } = req.params;
-    //found member
+    const {id} = req.params;
+    //get member by his id from params
     const foundMember = await memberModel.findById(id);
     if (foundMember) {
-      //update member by id
-      const updatedMember = await memberModel.findByIdAndUpdate(
-        foundMember._id,
-        { $set: req.body },
-        { new: true }
-      );
-      res.status(200).json({
-        status: "success",
-        message: "Member updated successfully",
-        updatedMember,
-      });
+      //upload image on cloudinary
+      const uploadedImg = await cloudinary.uploader.upload(req.file.path, {
+        folder: `members`,
+        });
+        // any data you want update it
+      const updateData = {
+                memberName: req.body.memberName,
+                roleInFamily: req.body.roleInFamily,
+                job: req.body.job,
+                salary: req.body.salary,
+                gender: req.body.gender,
+                birthday:req.body.birthday,
+                image:uploadedImg.secure_url
+              };
+          const updatedMember = await memberModel.findByIdAndUpdate(
+            id,
+            updateData,
+            {
+              new: true,
+              runValidators: true,
+            }
+          );
+            res.status(200).json({
+            status: "success",
+            message: "Member updated successfully",
+            updatedMember,
+          });
+        
     } else {
       res
-        .status(404)
-        .json({ status: "error", message: "This member not found" });
+      .status(404)
+      .json({ status: "error", message: "This member not found" });
+          
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
 //delete member function
 export const deleteMember = async (req, res) => {
   try {
@@ -93,9 +111,7 @@ export const getAllMembers = async (req, res) => {
           message: "This user doesn't have any members ",
         });
       } else {
-        res
-          .status(200)
-          .json({ status: "success", message: "Done", members });
+        res.status(200).json({ status: "success", message: "Done", members });
       }
     } else {
       res.status(403).json({ message: "invalid userId" });

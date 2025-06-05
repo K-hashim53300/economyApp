@@ -6,7 +6,7 @@ import { sendEmail } from "../../../services/sendEmail.js";
 //signup function
 export const signUp = async (req, res) => {
   try {
-    let { fullName, email, password, cPassword, address } = req.body;
+    let { fullName, email, password, cPassword, address,role } = req.body;
     if (!fullName || !email || !password) {
       res.status(404).json({status:"error", message: "All field are required" });
     } else {
@@ -25,6 +25,7 @@ export const signUp = async (req, res) => {
             email,
             password: hashedPassword,
             address,
+            role,
           });
           const savedUser = await newUser.save();
           const token = jwt.sign(
@@ -88,14 +89,14 @@ export const logIn = async (req, res) => {
           } else {
             //create token
             const token = jwt.sign(
-              { id: exisitingUser._id },
+              { id: exisitingUser._id , role:exisitingUser.role},
               process.env.JWT_SECRET,
               { expiresIn: 60 * 60 * 60 }
             );
             //return {token,id,fullName,email}
             res.status(200).json({
               status:'success',
-              message: "Login successful",
+              message: "You are logged in successfully",
               token,
             });
           }

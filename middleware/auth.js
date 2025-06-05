@@ -4,7 +4,10 @@ export const authMiddleware = ()=>{
     return async(req,res,next)=>{
         try {
             const {authorization} = req.headers;
-           const token = authorization.split(" ")[1];
+            if (!authorization) {
+                res.status(404).json({status:"fail",message:"no token exist"});
+            } else {
+                  const token = authorization.split(" ")[1];
            if (authorization.startsWith("Bearer")) {
             const decoded = jwt.verify(token,process.env.JWT_SECRET);
             if (decoded) {
@@ -22,8 +25,19 @@ export const authMiddleware = ()=>{
             res.json({message:"invalid token"})
            }
        
+            }
+         
         } catch (error) {
             res.json({error:error.message});
         }
     }
-} 
+};
+export const adminMiddleware = ()=>{
+    return(req,res,next)=>{
+        if(req.user?.role === "admin"){
+            next();
+        }else{
+            res.status(403).json({ status:"error" ,message: 'Access Denied: Admins Only' });
+        }
+    }
+}

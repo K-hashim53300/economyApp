@@ -26,14 +26,14 @@ export const signUpSchema = {
         .pattern(new RegExp("[A-Z]"))
         .pattern(new RegExp("[a-z]"))
         .pattern(new RegExp("[0-9]"))
-        .pattern(new RegExp("[!@#$%&*]"))
+        .pattern(new RegExp("[!@#$%&*-_]"))
         .required()
         .messages({
           "string.base": "password must be string",
           "string.empty": "password can't be empty",
           "string.min": "The password must be at least 8 characters ",
           "string.pattern.base":
-            "The password must contain an uppercase letter, a lowercase letter, a number, and a special symbol(!@#$%&*)",
+            "The password must contain an uppercase letter, a lowercase letter, a number, and a special symbol(!@#$%&*-_)",
           "any.required": "password is required",
         }),
       cPassword: joi.string().valid(joi.ref("password")).required(),
@@ -42,6 +42,10 @@ export const signUpSchema = {
         "string.empty": "The address can't be empty",
         "string.min": "The address must be at least 4 characters ",
       }),
+      role: joi.string().valid('user', 'admin').messages({
+      'any.only': 'Role must be either "user" or "admin"',
+      'string.base': 'Role must be a string'
+    }),
     }),
 };
 // login validation schema

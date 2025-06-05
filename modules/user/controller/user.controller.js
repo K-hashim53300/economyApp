@@ -1,9 +1,12 @@
+import { chatModel } from "../../../DB/models/chat.model.js";
 import { expenseModel } from "../../../DB/models/expense.model.js";
 import { incomeModel } from "../../../DB/models/income.model.js";
 import { memberModel } from "../../../DB/models/member.model.js";
 import { statisticsModel } from "../../../DB/models/statistics.model.js";
 import { userModel } from "../../../DB/models/user.model.js";
+import {goalsModel} from '../../../DB/models/goals.model.js';
 import bcrypt from "bcryptjs";
+import { budgetModel } from "../../../DB/models/budget.model.js";
 
 //update user (fullName,email,address)
 export const updateUser = async(req,res)=>{
@@ -28,7 +31,7 @@ export const updateUser = async(req,res)=>{
 //delete user and all his data 
 export const deleteUser = async (req,res) => {
   try {
-    const {id} = req.params;
+    const id = req.user._id;
     const foundedUser = await userModel.findById(id);
     if (foundedUser) {
       await userModel.findByIdAndDelete(foundedUser._id);
@@ -36,12 +39,15 @@ export const deleteUser = async (req,res) => {
       await expenseModel.deleteMany({userId:foundedUser._id});
       await memberModel.deleteMany({userId:foundedUser._id});
       await statisticsModel.deleteMany({userId:foundedUser._id});
-      res.status(200).json({status:"success", message:"The user and his data have been deleted"})
+      await goalsModel.deleteMany({userId:foundedUser._id});
+      await budgetModel.deleteMany({userId:foundedUser._id});
+      await chatModel.deleteMany({userId:foundedUser._id});
+      return res.status(200).json({status:"success", message:"The user and his data have been deleted"})
     } else {
-      res.status(404).json({status:"error",message:"This user not found"});
+      return res.status(404).json({status:"error",message:"This user not found"});
     }
   } catch (error) {
-    res.status(500).json({error:error.message});
+    return res.status(500).json({error:error.message});
   }
 }
 
@@ -80,6 +86,20 @@ export const updatePassword = async (req,res) => {
         res.status(401).json({ status:"error",message:"newPassword must match with newCPassword"});
     }
   } catch (error) {
-    res.status(500).json({error:error.message});
+    res.status(500).json({status:"error", error:error.message});
+  }
+}
+// Get chat user with financial advisor
+export const getUserChat = async(req,res) =>{
+  try {
+    const userId = req.user._id;
+    const chat = await chatModel.find({userId});
+    if (!chat) {
+      return res.status(404).json({status:"fail" , message:"There are no conversations at all. Go ask for advice."})
+    } else {
+      return res.status(200).json({status:"success" ,message:"Data fetched Successfully" , chat});
+    }
+  } catch (error) {
+    return res.status(500).json({status:"error", error:error.message});
   }
 }

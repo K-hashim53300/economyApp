@@ -20,12 +20,12 @@ const statisticsSchema = new mongoose.Schema(
     balance: {
       type: Number,
       required: true,
-      default:0
+      default: 0,
     },
     expensePercentage: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     monthlyExpenses: [
       {
@@ -39,6 +39,25 @@ const statisticsSchema = new mongoose.Schema(
         },
       },
     ],
+    monthlyIncomes: [
+      {
+        month: {
+          type: String,
+          required: true,
+        },
+        total: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    topExpenses: [
+      {
+        category: String,
+        total: Number,
+      },
+    ],
+    topSavingMonths: [{ month: String, saving: Number }],
   },
   { timestamps: true }
 );

@@ -534,16 +534,19 @@ https://economyapp.up.railway.app/economy-api/v1/
 ```json
 {
   "status": "success",
-  "message": "Expense updated successfully",
-  "updatedExpense": {
-    "_id": "67e95fb4036efb11b14130fc",
+  "message": "Member updated successfully",
+  "updatedMember": {
+    "_id": "67ec223c036efb11b1413128",
     "userId": "67e959f9036efb11b14130e2",
-    "expenseType": "Foods",
-    "expenseValue": 12000,
-    "description": "buy some foods",
-    "expenseDate": "2025-03-30T15:13:56.857Z",
-    "createdAt": "2025-03-30T15:13:56.858Z",
-    "updatedAt": "2025-03-30T15:16:24.755Z",
+    "memberName": "Marim Karim Mohamed",
+    "gender": "female",
+    "birthday": "2020-03-03T00:00:00.000Z",
+    "image": "https://res.cloudinary.com/dnpyxgn4n/image/upload/v1743533783/members/ancmf8xsllrhqgndl1es.png",
+    "roleInFamily": "Son4",
+    "job": "Freelancer",
+    "salary": 40000,
+    "createdAt": "2025-04-01T17:28:28.438Z",
+    "updatedAt": "2025-04-01T18:56:24.517Z",
     "__v": 0
   }
 }
@@ -609,8 +612,8 @@ https://economyapp.up.railway.app/economy-api/v1/
 
 ### **4. Get member by his name**
 
-- **URL:** `/member/{memberName}` 
-- **URL:** `/member/Marim Karim Mohamed` 
+- **URL:** `/member/{memberName}`
+- **URL:** `/member/Marim Karim Mohamed`
 - **Method:** `GET`
 - **Headers**Authorization: Bearer <JWT_TOKEN>
 - **Response:**

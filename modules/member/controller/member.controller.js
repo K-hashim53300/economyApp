@@ -10,7 +10,7 @@ export const addMember = async (req, res) => {
     const { error, value } = addMemberSchema.validate(req.body);
     if (error) {
       return res
-        .status(401)
+        .status(400)
         .json({ status: "error", message: error.details[0].message });
     } else {
       //uplod image on cloudinary

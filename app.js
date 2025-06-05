@@ -29,7 +29,12 @@ app.use(`${baseUrl}/user`,allRoutes.userRouter);
 app.use(`${baseUrl}/income`,allRoutes.incomeRouter);
 app.use(`${baseUrl}/expense`,allRoutes.expenseRouter);
 app.use(`${baseUrl}/member`,allRoutes.memberRouter);
+app.use(`${baseUrl}/goals`,allRoutes.goalsRouter);
+app.use(`${baseUrl}/budget`,allRoutes.budgetRouter);
 app.use(`${baseUrl}/statistics`,allRoutes.statisticsRouter);
+app.use(`${baseUrl}/ai`,allRoutes.AIRouter);
+app.use(`${baseUrl}/admin`,allRoutes.adminRouter);
+
 app.get('*',(req,res)=>{
     res.status(403).json({message:"This page not found"});
 });

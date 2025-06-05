@@ -25,6 +25,4 @@ export function sendEmail(dest, message,subject) {
 
   main().catch(console.error);
 }
-// email ===>   economyapp240@gmail.com
-//account password ==>   economy%&APP123
-//app password ==> aoub khzk yglu wsra
+

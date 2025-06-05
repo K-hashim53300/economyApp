@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import express from "express";
 import cors from 'cors';
-import * as allRoutes from './modules/index.route.js';
-import connection from "./DB/connection.js";
+import * as allRoutes from '../modules/index.route.js';
+import connection from "../DB/connection.js";
 const app = express();
 
 
@@ -48,3 +48,4 @@ app.listen(PORT,()=>{
     console.log(`Server running on http://localhost:${PORT}${baseUrl}/`);
 })
 
+export default app;

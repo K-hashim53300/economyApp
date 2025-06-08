@@ -209,12 +209,18 @@ export const chatWithAdvisor = async (req, res) => {
 };
 //delete chat
 export const deleteChatWithAdvisor = async(req,res)=>{
-  try {
-    const userId = req.user._id;
-    await chatModel.deleteMany({userId});
-    return res.status(200).json({status:"success",message:"Your chat with AI Advisor deleted successfully "});
+ try {
+    let { id } = req.params;
+    const foundChat = await chatModel.findById(id);
+    if (foundChat) {
+      //delete chat by id
+      await chatModel.findByIdAndDelete(foundChat._id);
+      return res.status(200).json({ status:"success", message: "Your chat deleted successfully" });
+    } else {
+      return res.status(404).json({ status:"fail", message: "This expense not found" });
+    }
   } catch (error) {
-    return res.status(500).json({ status: "fail", message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 

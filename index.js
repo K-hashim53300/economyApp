@@ -46,6 +46,4 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT,()=>{
     console.log(`Server running on: https://economyapp.up.railway.app${baseUrl}`)
     console.log(`Server running on http://localhost:${PORT}${baseUrl}/`);
-})
-
-export default app;
+});

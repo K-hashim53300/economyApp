@@ -9,5 +9,5 @@ router.post('/upload-price-data',authMiddleware(),adminMiddleware(),upload.singl
 //chatbot endpoint
 router.post('/chat',authMiddleware(),chatWithAdvisor);
 //delete chat
-router.delete('/chat',authMiddleware(),deleteChatWithAdvisor);
+router.delete('/chat/:id',deleteChatWithAdvisor);
 export default router;

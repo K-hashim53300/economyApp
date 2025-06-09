@@ -103,6 +103,7 @@ const topMonthsSaving = monthlyIncomes.map((incomeMonth) => {
         topExpenses,
         topMonthsSaving
       });
+      const savedStatistics = await userStatistics.save();
       return res.status(201).json({
         status: "success",
         message: "Statistics created successfully.",
@@ -126,6 +127,6 @@ const topMonthsSaving = monthlyIncomes.map((incomeMonth) => {
         savedStatistics,
       });
   } catch (error) {
-    return res.status(500).json({ error: "Error fetching user statistics" });
+    return res.status(500).json({status:"fail",message:error.message});
   }
 };

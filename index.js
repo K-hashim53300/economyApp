@@ -12,7 +12,7 @@ app.use(express.json());
 
 // added cors
 const allowedOrigins = [
-    "https://economyapp.up.railway.app", // link after upload project
+    "https://alive-roby-karimhashim2002-3cfd1cd3.koyeb.app", // link after upload project
     "http://localhost:3000" // link use when devolpment
 ];
 

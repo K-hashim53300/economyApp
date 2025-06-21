@@ -1,16 +1,27 @@
 import { goalsModel } from '../../../DB/models/goals.model.js';
+import { statisticsModel } from '../../../DB/models/statistics.model.js';
 
 //add goal function
 export const addGoal = async(req,res)=>{
   try {
-    let {name,amount,currentSavings,monthlySavings,timeline} = req.body;
+    let {name,amount,timeline} = req.body;
     const userId = req.user._id; //get user._id from authMiddleware
+    // Fetch user statistics to get the balance
+    const stats = await statisticsModel.findOne({ userId });
+    const currentBalance = stats?.balance ?? 0;
+    const monthlySavings = +((amount - currentBalance) / timeline).toFixed(2);
     if (!name || !amount || !timeline) {
         res.status(404).json({ status:"fail",message:"Goal name,amount and timeline are required"});
     } else {
-        const newGoal = new goalsModel({userId,name,amount,currentSavings,monthlySavings,timeline});//save in model
-        const savedGoal = await newGoal.save(); //save in  database
-        res.status(201).json({ status:"success",message:"Your goal added successfully",savedGoal});
+     await goalsModel.create({
+      userId,
+      name,
+      amount,
+      timeline,
+      currentSavings: currentBalance, // balance
+      monthlySavings,
+    });
+        res.status(201).json({ status:"success",message:"Your goal added successfully"});
     }
   } catch (error) {
     res.status(500).json({error:error.message})
@@ -58,7 +69,7 @@ export const getAllGoals = async (req,res) => {
             //get all goals
             const goals = await goalsModel.find({userId});
             if (!goals.length) {
-                res.status(404).json({ status:"fail",message:"This user doesn't have any incomes "})
+                res.status(404).json({ status:"fail",message:"This user doesn't have any goals "})
             } else {
                 res.status(200).json({ status:"success",message:"Done",goals});
             }

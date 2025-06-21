@@ -34,13 +34,20 @@ const formattedTopCategories = topCategories.map(cat => ({
   category: cat._id,
   total: cat.total
 }));
+    // Count users by class
+    const classAUsers = await userModel.countDocuments({ class: "A" });
+    const classBUsers = await userModel.countDocuments({ class: "B" });
+    const classCUsers = await userModel.countDocuments({ class: "C" });
 
 const newAdminStatistics = await adminDashboardModel.create({
   totalUsers,
   totalIncome: totalIncomeValue,
   totalExpenses: totalExpensesValue,
   balance: totalIncomeValue - totalExpensesValue,
-  topCategories: formattedTopCategories
+  topCategories: formattedTopCategories,
+  classAUsers,
+  classBUsers,
+  classCUsers
 });
     return res.status(200).json({
       status: 'success',

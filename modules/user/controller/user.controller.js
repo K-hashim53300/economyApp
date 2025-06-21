@@ -56,7 +56,7 @@ export const profile = async (req, res) => {
   try {
     const user = await userModel
       .findById(req.user._id)
-      .select("fullName email address");//get all this without id
+      .select("fullName email address class");//get all this without id
     if (user) {
       res.status(200).json({ status:"success", message: "Done", user });
     } else {

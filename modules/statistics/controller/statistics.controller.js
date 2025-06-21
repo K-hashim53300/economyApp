@@ -2,6 +2,7 @@ import { expenseModel } from "../../../DB/models/expense.model.js";
 import { incomeModel } from "../../../DB/models/income.model.js";
 import { memberModel } from "../../../DB/models/member.model.js";
 import { statisticsModel } from "../../../DB/models/statistics.model.js";
+import { userModel } from "../../../DB/models/user.model.js";
 
 //get all statistics function
 export const getStatistics = async (req, res) => {
@@ -22,6 +23,15 @@ export const getStatistics = async (req, res) => {
     const totalIncomeFromMembers = totalIncomeFromSalaries[0]?.total || 0;
     // Calculate total income
     const totalIncome = totalIncomeFromIncomeModel + totalIncomeFromMembers;
+    //Classification user class[A,B,C] based on total income
+    let userClass = 'C';
+    if(totalIncome > 40000){
+      userClass = 'A'; 
+    }else if(totalIncome >= 20000){
+      userClass = 'B';
+    }else{
+      userClass = 'C';
+    }
     // Calculate the total expenses
     const totalExpenseFromExpenses = await expenseModel.aggregate([
       { $match: { userId: userId } },
@@ -115,9 +125,11 @@ const topMonthsSaving = monthlyIncomes.map((incomeMonth) => {
       userStatistics.balance = balance;
       userStatistics.expensePercentage = expensePercentage;
       userStatistics.monthlyExpenses = monthlyExpenses;
+      userStatistics.monthlyIncomes = monthlyIncomes;
       userStatistics.topExpenses= topExpenses;
       userStatistics.topSavingMonths= topMonthsSaving;
     }
+    await userModel.findByIdAndUpdate(userId,{class:userClass});
     const savedStatistics = await userStatistics.save();
     return res
       .status(200)

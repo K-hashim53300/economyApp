@@ -14,15 +14,6 @@ export const addGoalSchema = {
             "number.empty":"The goal amount can't be empty",
             "any.required":"The goal amount is required"
         }),
-        currentSavings:joi.number().messages({
-            "number.base":"The current Savings must be number",
-            "number.empty":"The current Savings can't be empty",
-        }),
-        monthlySavings:joi.number().required().messages({
-            "number.base":"The monthly Savings must be number",
-            "number.empty":"The monthly Savings can't be empty",
-            "any.required":"The monthly Savings is required"
-        }),
         timeline:joi.number().required().messages({
             "number.base":"The timeline for goal must be number",
             "number.empty":"The timeline for goal can't be empty",

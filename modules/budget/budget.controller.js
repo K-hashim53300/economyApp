@@ -10,7 +10,7 @@ export const suggestedBudget = async (req, res) => {
     const totalIncome = statistc?.totalIncome ?? 0;
     // Egyptian specific budget guidelines
     const budget_guidelines = {
-      "Housing/Rent": 0.3,
+      "HousingRent": 0.3,
       "Foods": 0.22,
      "Utilities": 0.1,
       "Transportation": 0.1,

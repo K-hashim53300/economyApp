@@ -44,6 +44,6 @@ connection(); //call function to DB connection
 //run server
 const PORT = process.env.PORT || 5000
 app.listen(PORT,()=>{
-    console.log(`Server running on: https://economyapp.up.railway.app${baseUrl}`)
+    console.log(`Server running on: https://alive-roby-karimhashim2002-3cfd1cd3.koyeb.app${baseUrl}`)
     console.log(`Server running on http://localhost:${PORT}${baseUrl}/`);
 });

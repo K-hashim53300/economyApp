@@ -24,7 +24,19 @@ const adminDashboardSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    topCategories: [topCategorySchema]
+    topCategories: [topCategorySchema],
+    classAUsers: {
+      type: Number,
+      required: true,
+    },
+    classBUsers: {
+      type: Number,
+      required: true,
+    },
+    classCUsers: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

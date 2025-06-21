@@ -7,6 +7,7 @@ import moment from "moment";
 import { chatModel } from "../../../DB/models/chat.model.js";
 import { incomeModel } from "../../../DB/models/income.model.js";
 import { expenseModel } from '../../../DB/models/expense.model.js';
+import { userModel } from "../../../DB/models/user.model.js";
 
 // Extract numbers from text (including Arabic text)
 function extractNumber(text) {
@@ -68,7 +69,7 @@ async function getDeepseekAdvice(messages, apiKey) {
       model: "deepseek-reasoner",
       messages: messages,
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 700,
     });
 
     if (response.choices[0].message.reasoning_content) {
@@ -140,6 +141,20 @@ export const chatWithAdvisor = async (req, res) => {
         }EGP - monthly i will save ${goal.monthlySavings}EGP`;
       })
       .join("\n");
+      // Check the user class and describe it
+      // Get user profile to check class
+const user = await userModel.findById(userId);
+const userClassDescription = (() => {
+  switch (user.class) {
+    case "A":
+      return `Class A: High-income family.`;
+    case "B":
+      return `Class B: Middle-income family.`;
+    case "C":
+    default:
+      return `Class C: Low-income family.`;
+  }
+})();
     //get members for user from database
     const familyMembers = await memberModel.find({ userId });
     // Format goals lists as text
@@ -163,17 +178,13 @@ export const chatWithAdvisor = async (req, res) => {
         return `${i + 1}.  Product name: ${prod.product},Product price: ${prod.price} and price_change_percent: ${prod.price_change_percent}%`;
       })
       .join("\n");
-      
     // Create financial context from the user data
     const financial_context = `
-    Number of Incomes: ${getIncomes.length ?? 0} 
     Incomes: ${incomeList || "no incomes added"}
-    Number of Expenses: ${getExpenses.length ?? 0} 
     Expenses: ${expensesList || "no expenses added"}
-    Number of Goals: ${getGoals.length ?? 0}
     Goals:${goalsList || "No goals set"}
-    Family Members: ${familyMembers.length ?? 0}
     Family Members:${memberList || "no members in this family, it is user only"}
+    User Class Description: ${userClassDescription}
     Market Prices:${productPrices || "you give us product price"}
     `;
     // Create messages list for the conversation

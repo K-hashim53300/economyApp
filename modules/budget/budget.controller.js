@@ -1,6 +1,7 @@
 import { budgetModel } from "../../DB/models/budget.model.js";
 import { expenseModel } from "../../DB/models/expense.model.js";
 import { statisticsModel } from "../../DB/models/statistics.model.js";
+import moment from "moment";
 
 // Suggested-Budget Planner function
 export const suggestedBudget = async (req, res) => {
@@ -8,6 +9,20 @@ export const suggestedBudget = async (req, res) => {
     const userId = req.user._id;
     const statistc = await statisticsModel.findOne({ userId });
     const totalIncome = statistc?.totalIncome ?? 0;
+    //Check Create Budgets in month
+    const startOfMonth = moment().startOf("month").toDate();
+    const endOfMonth = moment().endOf("month").toDate();
+    const existingBudget = await budgetModel.findOne({
+      userId,
+      createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+    });
+      if (existingBudget) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Suggested budget already created for this month.",
+      });
+    }
+
     // Egyptian specific budget guidelines
     const budget_guidelines = {
       "HousingRent": 0.3,
@@ -192,8 +207,13 @@ export const getBudgetCategoryByName = async (req, res) => {
 // Get All Suggested Budgets
 export const getAllSuggestedBudgets = async (req, res) => {
   try {
-    const all = await budgetModel.find();
-    res.status(200).json(all);
+    const userId = req.user._id;
+    const all = await budgetModel.find({ userId });
+    if (all.length == 0) {
+      res.status(404).json({status:"fail",message:"This user don't have any budgets"});
+    } else {
+      res.status(200).json(all);
+    }
   } catch (err) {
     res.status(500).json({ status: "fail", message: err.message });
   }
